@@ -10,14 +10,12 @@ import {
   Typography,
   CssBaseline,
   useScrollTrigger,
-  Box,
   Slide,
   IconButton,
-  Container,
 } from "@material-ui/core"
 import MenuIcon from "@material-ui/icons/Menu"
-import Announcement from "../components/Announcement"
-import SupplierAndCategory from "../components/SupplierAndCategory"
+
+import Menu from "../components/Menu"
 import { CategoryChipPositionProvider } from "../components/CategoryChipPositionProvider"
 import { CategoryInViewProvider } from "../components/CategoryInViewProvider"
 import { CategoryAnchorProvider } from "../components/CategoryAnchorProvider"
@@ -94,17 +92,11 @@ export default function Home() {
           </StyledAppBar>
         </HideAppBar>
 
-        <Announcement
-          title="公告"
-          announcement="為提升各店家肉品及物料採購商品之效率，此公告將明列各品項物料現階段採購時程，以期各店能準時採購且準時收到貨品。 為提升各店家肉品及物料採購商品之效率，此公告將明列各品項物料現階段採購時程，以期各店能準時採購且準時收到貨品。"
-          defaultExpanded={false}
-        />
-
         <CategoryAnchorProvider>
           <CategoryChipPositionProvider>
             <CategoryInViewProvider>
               <MenuDataProvider>
-                <SupplierAndCategory />
+                <Menu />
                 <Footer />
               </MenuDataProvider>
             </CategoryInViewProvider>

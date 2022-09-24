@@ -29,6 +29,14 @@ export const MenuDataProvider = ({ children }) => {
     [activeTabIndex]
   )
 
+  const currentDeliveryRule = useMemo(
+    () => ({
+      deliveryInNDays: "收單後 7 天內到貨",
+      deliveryFee: "常溫運費 NT$100；冷藏運費 NT$100；冷凍運費 NT$100",
+    }),
+    []
+  )
+
   const handleTabChange = useCallback((tabIdx) => {
     setActiveCategoryId("")
     document.getElementById(CATEGORY_CHIP_LIST_ID).scrollTo({ left: 0 })
@@ -42,8 +50,15 @@ export const MenuDataProvider = ({ children }) => {
       activeCategoryId,
       setActiveCategoryId,
       currentCategories,
+      currentDeliveryRule,
     }),
-    [activeTabIndex, handleTabChange, activeCategoryId, currentCategories]
+    [
+      activeTabIndex,
+      handleTabChange,
+      activeCategoryId,
+      currentCategories,
+      currentDeliveryRule,
+    ]
   )
 
   return (

@@ -17,6 +17,8 @@ import mockProducts from "../data/products"
 import { useMenuData } from "./MenuDataProvider"
 import CategoryChipList from "./CategoryChipList"
 import { useCategoryInView } from "./CategoryInViewProvider"
+import Announcement from "./Announcement"
+import DeliveryRule from "./DeliveryRule"
 
 const suppliers = parseProducts(mockProducts)
 
@@ -43,7 +45,7 @@ function a11yProps(index) {
   }
 }
 
-export default function SupplierAndCategory() {
+export default function Menu() {
   const theme = useTheme()
   const isAppBarVisible = useScrollTrigger()
   const { activeTabIndex, handleTabChange } = useMenuData()
@@ -61,6 +63,17 @@ export default function SupplierAndCategory() {
 
   return (
     <>
+      {activeTabIndex === 0 ? (
+        <Announcement
+          title="公告"
+          announcement="為提升各店家肉品及物料採購商品之效率，此公告將明列各品項物料現階段採購時程，以期各店能準時採購且準時收到貨品。 為提升各店家肉品及物料採購商品之效率，此公告將明列各品項物料現階段採購時程，以期各店能準時採購且準時收到貨品。"
+          defaultExpanded={false}
+        />
+      ) : (
+        <Box>
+          <DeliveryRule />
+        </Box>
+      )}
       <StickyNavigationBar $isAppBarVisible={isAppBarVisible} $muiTheme={theme}>
         <Tabs
           value={activeTabIndex}
