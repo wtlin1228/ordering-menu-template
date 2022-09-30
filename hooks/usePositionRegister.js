@@ -14,5 +14,5 @@ export default function usePositionRegister(anchorId) {
     return () => unregisterCategoryChipPosition(anchorId)
   }, [anchorId, registerCategoryChipPosition, unregisterCategoryChipPosition])
 
-  return { ref }
+  return ref
 }

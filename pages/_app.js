@@ -1,5 +1,6 @@
 import "../styles/globals.css"
 import { createTheme, ThemeProvider } from "@material-ui/core/styles"
+import { CssBaseline } from "@material-ui/core"
 
 function SafeHydrate({ children }) {
   return (
@@ -43,6 +44,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <SafeHydrate>
       <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Component {...pageProps} />
       </ThemeProvider>
     </SafeHydrate>

@@ -19,7 +19,7 @@ export default function Category({ children, category, reset }) {
 
   const { handleCategoryInView } = useCategoryInView()
 
-  const { ref } = useMenuCategoryInView({
+  const ref = useMenuCategoryInView({
     callback: () => {
       handleCategoryInView(category.uuid)
     },

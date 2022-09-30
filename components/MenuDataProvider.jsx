@@ -29,13 +29,28 @@ export const MenuDataProvider = ({ children }) => {
     [activeTabIndex]
   )
 
-  const currentDeliveryRule = useMemo(
-    () => ({
-      deliveryInNDays: "收單後 7 天內到貨",
-      deliveryFee: "常溫運費 NT$100；冷藏運費 NT$100；冷凍運費 NT$100",
-    }),
-    []
-  )
+  // TODO: get currentDeliveryRule from API data
+  const currentDeliveryRule = useMemo(() => {
+    if (activeTabIndex === 0) {
+      return null
+    } else if (activeTabIndex === 1) {
+      return {
+        deliveryInNDays: "收單後 7 天內到貨",
+        deliveryFee: "常溫運費 NT$100；冷藏運費 NT$100；冷凍運費 NT$100",
+      }
+    } else if (activeTabIndex === 2) {
+      return {
+        deliveryInNDays: "收單後 100001 天內到貨",
+        deliveryFee:
+          "依叫貨結果核算運費，同供應商訂單滿 NT$2,000 免運，常溫運費 NT$100；冷藏運費 NT$100；冷凍運費 NT$100",
+      }
+    }
+    return {
+      deliveryInNDays: "收單後 99 天內到貨",
+      deliveryFee:
+        "依叫貨結果核算運費，同供應商訂單滿 NT$2,000 免運，依叫貨結果核算運費，同供應商訂單滿 NT$2,000 免運，依叫貨結果核算運費，同供應商訂單滿 NT$2,000 免運，依叫貨結果核算運費，同供應商訂單滿 NT$2,000 免運",
+    }
+  }, [activeTabIndex])
 
   const handleTabChange = useCallback((tabIdx) => {
     setActiveCategoryId("")

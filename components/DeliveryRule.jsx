@@ -8,7 +8,10 @@ import MonetizationOnIcon from "@material-ui/icons/MonetizationOn"
 import { useMenuData } from "./MenuDataProvider"
 
 const DeliveryRuleWrapper = styled.div`
-  margin: 12px 16px;
+  padding: 12px 16px;
+`
+
+const StyledList = styled(List)`
   background-color: #f5f5f5;
   border-radius: 8px;
 `
@@ -16,9 +19,13 @@ const DeliveryRuleWrapper = styled.div`
 export default function DeliveryRule() {
   const { currentDeliveryRule } = useMenuData()
 
+  if (!currentDeliveryRule) {
+    return <div />
+  }
+
   return (
     <DeliveryRuleWrapper>
-      <List component="nav" aria-label="delivery rule">
+      <StyledList component="nav" aria-label="delivery rule">
         <ListItem>
           <ListItemIcon>
             <LocalShippingIcon color="primary" />
@@ -37,7 +44,7 @@ export default function DeliveryRule() {
             primaryTypographyProps={{ variant: "body2" }}
           />
         </ListItem>
-      </List>
+      </StyledList>
     </DeliveryRuleWrapper>
   )
 }

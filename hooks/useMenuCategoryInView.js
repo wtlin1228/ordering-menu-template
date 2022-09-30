@@ -1,7 +1,25 @@
 import { useRef, useEffect } from "react"
+import { useAppBarStatus } from "../components/AppBarStatusProvider"
+import { APP_BAR_HEIGHT } from "../constants/elementHeight"
+
+const DEFAULT_MARGIN = 144
+
+const getRootMargin = (shouldShowAppBar) => {
+  if (shouldShowAppBar) {
+    return `-${DEFAULT_MARGIN + APP_BAR_HEIGHT}px 0px ${
+      -window.innerHeight + DEFAULT_MARGIN + APP_BAR_HEIGHT + 1
+    }px 0px`
+  }
+  return `-${DEFAULT_MARGIN}px 0px ${
+    -window.innerHeight + DEFAULT_MARGIN + 1
+  }px 0px`
+}
 
 export default function useMenuCategoryInView({ callback = () => {}, reset }) {
   const ref = useRef(null)
+
+  const { shouldShowAppBar } = useAppBarStatus()
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -10,7 +28,7 @@ export default function useMenuCategoryInView({ callback = () => {}, reset }) {
         }
       },
       {
-        rootMargin: `-144px 0px ${-window.innerHeight + 144 + 1}px 0px`,
+        rootMargin: getRootMargin(shouldShowAppBar),
         threshold: 0,
       }
     )
@@ -24,7 +42,7 @@ export default function useMenuCategoryInView({ callback = () => {}, reset }) {
         observer.unobserve(target)
       }
     }
-  }, [callback, reset]) // TODO: should not use dependency to implement business logic
+  }, [callback, reset, shouldShowAppBar])
 
-  return { ref }
+  return ref
 }

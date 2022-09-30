@@ -36,7 +36,8 @@ export default function CategoryChipList() {
     (categoryId) => {
       const positionX = getCategoryChipPosition(categoryId)
       if (positionX && chipsScrollBoxRef.current) {
-        animateScrollTo([positionX - 5, null], {
+        // minus padding-left of category chip list to avoid shifting
+        animateScrollTo([positionX - 16, null], {
           elementToScroll: chipsScrollBoxRef.current,
         })
       }

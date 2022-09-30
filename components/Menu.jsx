@@ -1,41 +1,51 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import styled from "styled-components"
-import {
-  useScrollTrigger,
-  useTheme,
-  List,
-  Tabs,
-  Tab,
-  Box,
-} from "@material-ui/core"
-import TabPanel from "./TabPanel"
+import { useTheme, List, Tabs, Tab, Box } from "@material-ui/core"
 
-import Category from "./Category"
-import Product from "./Product"
 import parseProducts from "../utils/parseProducts"
 import mockProducts from "../data/products"
+import {
+  APP_BAR_HEIGHT,
+  TABS_HEIGHT,
+  CATEGORY_HEIGHT,
+} from "../constants/elementHeight"
+import { useVerticalScrollTo } from "../hooks/useVerticalScrollTo"
+
 import { useMenuData } from "./MenuDataProvider"
-import CategoryChipList from "./CategoryChipList"
 import { useCategoryInView } from "./CategoryInViewProvider"
+import { useAppBarStatus } from "./AppBarStatusProvider"
+import TabPanel from "./TabPanel"
+import Category from "./Category"
+import Product from "./Product"
+import CategoryChipList from "./CategoryChipList"
 import Announcement from "./Announcement"
 import DeliveryRule from "./DeliveryRule"
 
 const suppliers = parseProducts(mockProducts)
 
-const StickyNavigationBar = styled.div`
+const StickyDiv = styled.div`
   background-color: white;
-  z-index: 10;
-  height: 100px;
   position: sticky;
-  top: ${({ $isAppBarVisible }) => ($isAppBarVisible ? 0 : "56px")};
+  z-index: 10;
   will-change: top;
   transition: top 0.15s;
   transition-delay: ${({ $isAppBarVisible }) =>
-    $isAppBarVisible ? 0 : "0.2s"};
+    $isAppBarVisible ? "0.2s" : 0};
   transition-timing-function: ${({ $isAppBarVisible, $muiTheme }) =>
     $isAppBarVisible
-      ? $muiTheme.transitions.easing.sharp
-      : $muiTheme.transitions.easing.easeIn};
+      ? $muiTheme.transitions.easing.easeIn
+      : $muiTheme.transitions.easing.sharp};
+`
+
+const StickyTabs = styled(StickyDiv)`
+  height: 48px;
+  top: ${({ $isAppBarVisible }) => ($isAppBarVisible ? APP_BAR_HEIGHT : 0)}px;
+`
+
+const StickyCategoryChipList = styled(StickyDiv)`
+  height: 60px;
+  top: ${({ $isAppBarVisible }) =>
+    $isAppBarVisible ? APP_BAR_HEIGHT + TABS_HEIGHT : TABS_HEIGHT}px;
 `
 
 function a11yProps(index) {
@@ -47,13 +57,49 @@ function a11yProps(index) {
 
 export default function Menu() {
   const theme = useTheme()
-  const isAppBarVisible = useScrollTrigger()
-  const { activeTabIndex, handleTabChange } = useMenuData()
 
-  const handleChange = (event, newValue) => {
+  const { activeTabIndex, handleTabChange } = useMenuData()
+  const { shouldShowAppBar } = useAppBarStatus()
+  const verticalScrollTo = useVerticalScrollTo()
+
+  const deliveryRuleRef = useRef()
+  const menuBodyRef = useRef()
+  const shouldScrollAfterTabSwitchedRef = useRef(false)
+
+  const handleChange = (_event, newValue) => {
+    const { bottom } = deliveryRuleRef.current.getBoundingClientRect()
+    shouldScrollAfterTabSwitchedRef.current = shouldShowAppBar
+      ? bottom < CATEGORY_HEIGHT + APP_BAR_HEIGHT
+      : bottom < CATEGORY_HEIGHT
     handleTabChange(newValue)
-    scrollTo(0, 0)
   }
+
+  useEffect(() => {
+    const callback = (mutationList) => {
+      if (
+        mutationList.length > 0 &&
+        menuBodyRef.current &&
+        shouldScrollAfterTabSwitchedRef.current
+      ) {
+        const { bottom } = menuBodyRef.current.getBoundingClientRect()
+        verticalScrollTo(bottom)
+      }
+    }
+    const observer = new MutationObserver(callback)
+
+    const el = deliveryRuleRef.current
+    if (el) {
+      observer.observe(el, {
+        attributes: true,
+        childList: false,
+        subtree: false,
+      })
+    }
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [shouldShowAppBar, verticalScrollTo])
 
   const [reset, forceRerender] = useState({})
   const { registerForceRerenderFn } = useCategoryInView()
@@ -63,18 +109,13 @@ export default function Menu() {
 
   return (
     <>
-      {activeTabIndex === 0 ? (
-        <Announcement
-          title="公告"
-          announcement="為提升各店家肉品及物料採購商品之效率，此公告將明列各品項物料現階段採購時程，以期各店能準時採購且準時收到貨品。 為提升各店家肉品及物料採購商品之效率，此公告將明列各品項物料現階段採購時程，以期各店能準時採購且準時收到貨品。"
-          defaultExpanded={false}
-        />
-      ) : (
-        <Box>
-          <DeliveryRule />
-        </Box>
-      )}
-      <StickyNavigationBar $isAppBarVisible={isAppBarVisible} $muiTheme={theme}>
+      <Announcement
+        title="公告"
+        announcement="為提升各店家肉品及物料採購商品之效率，此公告將明列各品項物料現階段採購時程，以期各店能準時採購且準時收到貨品。 為提升各店家肉品及物料採購商品之效率，此公告將明列各品項物料現階段採購時程，以期各店能準時採購且準時收到貨品。"
+        defaultExpanded={false}
+      />
+
+      <StickyTabs $isAppBarVisible={shouldShowAppBar} $muiTheme={theme}>
         <Tabs
           value={activeTabIndex}
           onChange={handleChange}
@@ -92,8 +133,20 @@ export default function Menu() {
             />
           ))}
         </Tabs>
+      </StickyTabs>
+
+      <Box ref={deliveryRuleRef} data-tabidx={activeTabIndex}>
+        <DeliveryRule />
+      </Box>
+
+      <StickyCategoryChipList
+        $isAppBarVisible={shouldShowAppBar}
+        $muiTheme={theme}
+      >
         <CategoryChipList />
-      </StickyNavigationBar>
+      </StickyCategoryChipList>
+
+      <span ref={menuBodyRef} />
 
       <Box my={1}>
         <List>

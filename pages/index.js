@@ -1,67 +1,17 @@
 import Head from "next/head"
 
 import React from "react"
-import PropTypes from "prop-types"
 
 import { styled } from "@material-ui/core/styles"
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  CssBaseline,
-  useScrollTrigger,
-  Slide,
-  IconButton,
-} from "@material-ui/core"
-import MenuIcon from "@material-ui/icons/Menu"
 
+import AppBar from "../components/AppBar"
 import Menu from "../components/Menu"
 import { CategoryChipPositionProvider } from "../components/CategoryChipPositionProvider"
 import { CategoryInViewProvider } from "../components/CategoryInViewProvider"
 import { CategoryAnchorProvider } from "../components/CategoryAnchorProvider"
 import { MenuDataProvider } from "../components/MenuDataProvider"
 import Footer from "../components/Footer"
-
-function HideOnScroll({ children }) {
-  const trigger = useScrollTrigger()
-
-  return (
-    <Slide appear={false} direction="down" in={!trigger}>
-      {children}
-    </Slide>
-  )
-}
-
-HideOnScroll.propTypes = {
-  children: PropTypes.element.isRequired,
-}
-
-function HideAppBar({ children }) {
-  return (
-    <React.Fragment>
-      <CssBaseline />
-      <HideOnScroll>{children}</HideOnScroll>
-      <Toolbar />
-    </React.Fragment>
-  )
-}
-
-const StyledAppBar = styled(AppBar)({
-  backgroundColor: "white",
-  color: "#454F5B",
-  boxShadow: "none",
-})
-
-const StyledMenuIconButton = styled(IconButton)(({ theme }) => ({
-  marginLeft: theme.spacing(0.5),
-  marginRight: theme.spacing(2),
-}))
-
-const ShopTitle = styled(Typography)({
-  textOverflow: "ellipsis",
-  overflow: "hidden",
-  whiteSpace: "nowrap",
-})
+import { AppBarStatusProvider } from "../components/AppBarStatusProvider"
 
 const MenuWidthLimiter = styled("div")({
   maxWidth: 599,
@@ -77,27 +27,15 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MenuWidthLimiter>
-        <HideAppBar>
-          <StyledAppBar>
-            <Toolbar>
-              <StyledMenuIconButton
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-              >
-                <MenuIcon />
-              </StyledMenuIconButton>
-              <ShopTitle variant="h6">門市訂貨賣場</ShopTitle>
-            </Toolbar>
-          </StyledAppBar>
-        </HideAppBar>
-
         <CategoryAnchorProvider>
           <CategoryChipPositionProvider>
             <CategoryInViewProvider>
               <MenuDataProvider>
-                <Menu />
-                <Footer />
+                <AppBarStatusProvider>
+                  <AppBar />
+                  <Menu />
+                  <Footer />
+                </AppBarStatusProvider>
               </MenuDataProvider>
             </CategoryInViewProvider>
           </CategoryChipPositionProvider>
