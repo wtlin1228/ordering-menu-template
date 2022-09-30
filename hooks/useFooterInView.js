@@ -1,5 +1,4 @@
 import { useRef, useEffect } from "react"
-import { useAppBarStatus } from "../components/AppBarStatusProvider"
 import { useCategoryInView } from "../components/CategoryInViewProvider"
 import { useMenuData } from "../components/MenuDataProvider"
 
@@ -9,7 +8,6 @@ export default function useFooterInView() {
 
   const { currentCategories } = useMenuData()
   const lastCategoryId = currentCategories[currentCategories.length - 1][0]
-  const { lockTrigger, unlockTrigger } = useAppBarStatus()
 
   const ref = useRef(null)
 
@@ -23,12 +21,7 @@ export default function useFooterInView() {
           )
         } else {
           handleLeaveBottom()
-
-          lockTrigger()
           executeForceRerenderFn()
-          setTimeout(() => {
-            unlockTrigger()
-          }, 0)
         }
       },
       {
@@ -52,8 +45,6 @@ export default function useFooterInView() {
     handleLeaveBottom,
     executeForceRerenderFn,
     lastCategoryId,
-    lockTrigger,
-    unlockTrigger,
   ])
 
   return { ref }
