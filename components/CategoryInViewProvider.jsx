@@ -1,13 +1,6 @@
 import { Subject } from "rxjs"
 
-import {
-  useRef,
-  useCallback,
-  useContext,
-  useMemo,
-  createContext,
-  useEffect,
-} from "react"
+import { useRef, useCallback, useContext, useMemo, createContext } from "react"
 
 const CategoryInViewContext = createContext({})
 
