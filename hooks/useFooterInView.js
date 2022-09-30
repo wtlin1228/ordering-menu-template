@@ -14,6 +14,8 @@ export default function useFooterInView() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
+        // Set ratio to 0.99 because footer's height might be
+        // float, not integer.
         if (entry.intersectionRatio > 0.99) {
           handleCategoryInView(
             /* categoryId */ lastCategoryId,
@@ -25,8 +27,6 @@ export default function useFooterInView() {
         }
       },
       {
-        // Set threshold to 0.99 because footer's height might be
-        // float, not integer.
         threshold: 0.99,
       }
     )
