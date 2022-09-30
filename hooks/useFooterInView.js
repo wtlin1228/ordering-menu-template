@@ -47,5 +47,5 @@ export default function useFooterInView() {
     lastCategoryId,
   ])
 
-  return { ref }
+  return ref
 }

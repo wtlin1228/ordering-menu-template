@@ -3,7 +3,7 @@ import { Box } from "@material-ui/core"
 import useFooterInView from "../hooks/useFooterInView"
 
 export default function Footer() {
-  const { ref } = useFooterInView()
+  const ref = useFooterInView()
 
   return (
     <Box ref={ref} py={3} px={2} bgcolor="#F5F5F5">
